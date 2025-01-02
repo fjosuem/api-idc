@@ -68,8 +68,28 @@ namespace APIIDC.Controllers
             return doctrinas;
         }
 
-        [HttpGet("{id}", Name = "DetalleDoctrina")]
-        public async Task<IEnumerable<Application.DTOs.DetalleDoctrinaDto>> Get(int id)
+        [HttpGet("{id}", Name = "DoctrinaActual")]
+        public async Task<DoctrinaDto> Get(int id)
+        {
+            return await (
+                        from x in _context.Doctrina
+                        where x.IdDoctrina == id
+                        select new DoctrinaDto
+                        {
+                            IdDoctrina = x.IdDoctrina,
+                            IdCongregacion = x.IdCongregacion,
+                            Titulo = x.Titulo,
+                            Descripcion = x.Descripcion,
+                            UrlImagen = x.UrlImagen,
+                            FechaCreacion = x.FechaCreacion,
+                            FechaEdicion = x.FechaEdicion,
+                            UrlVideoYoutube = x.UrlVideoYoutube
+                        }
+                    ).FirstOrDefaultAsync();
+        }
+        
+        [HttpGet("detalle/{id}", Name = "DetalleDoctrina")]
+        public async Task<IEnumerable<Application.DTOs.DetalleDoctrinaDto>> GetDetalle(int id)
         {
             return await (
                         from detalle in _context.DetalleDoctrina
